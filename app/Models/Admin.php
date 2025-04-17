@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Models\AuthBaseModel;
 
-class User extends AuthBaseModel
+class Admin extends AuthBaseModel
 {
-
 
     /**
      * The attributes that are mass assignable.
@@ -19,12 +18,9 @@ class User extends AuthBaseModel
         'password',
         'image',
 
-        'creater_id',
-        'creater_type',
-        'updater_id',
-        'updater_type',
-        'deleter_id',
-        'deleter_type',
+        'created_by',
+        'updated_by',
+        'deleted_by',
 
         'created_at',
         'updated_at',
