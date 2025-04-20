@@ -19,6 +19,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('gender')->default(User::GENDER_OTHER)->comment(User::GENDER_MALE . '= Male, ' . User::GENDER_FEMALE . '= Female, '. User::GENDER_OTHER . '= Other ');
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(User::STATUS_ACTIVE)->comment(User::STATUS_ACTIVE . '= Active, ' . User::STATUS_INACTIVE . '= Inactive, '. User::STATUS_PENDING . '= Pending ');
             $table->timestamp('email_verified_at')->nullable();

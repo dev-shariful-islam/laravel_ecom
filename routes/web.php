@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\Admin\AdminManagement\AdminController;
 use App\Http\Controllers\Backend\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Backend\User\UserProfileController;
 use App\Http\Controllers\Frontend\HomeController;
@@ -18,14 +19,23 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 });
 
 
+// User Auth Routes
 Route::group(['middleware' => ['auth:web'], 'prefix' => 'user', 'as' => 'user.'], function () {
     Route::get('/profile', [UserProfileController::class, 'profile'])->name('profile');
 });
 
-Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('dashboard');
+// Admin Auth Routes
+Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin'], function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Admin Management Routes
+    Route::group(['prefix' => 'admin-management', 'as' => 'am.'], function () {
+        Route::resource('admin', AdminController::class);
+    });
 });
 
+
+// Frontend Routes
 Route::group(['as' => 'f.'], function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
 });

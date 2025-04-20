@@ -1,4 +1,4 @@
-@extends('backend.admin.layouts.master')
+@extends('backend.admin.layouts.master', ['page_slug' => 'dashboard'])
 @section('title', 'Admin Dashboard -')
 @section('content')
 <div class="row">

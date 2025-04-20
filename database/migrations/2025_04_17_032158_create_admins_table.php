@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('image')->nullable();
+            $table->string('gender')->default(Admin::GENDER_OTHER)->comment(Admin::GENDER_MALE . '= Male, ' . Admin::GENDER_FEMALE . '= Female, '. Admin::GENDER_OTHER . '= Other ');
             $table->tinyInteger('status')->default(Admin::STATUS_ACTIVE)->comment(Admin::STATUS_ACTIVE . '= Active, ' . Admin::STATUS_INACTIVE . '= Inactive, '. Admin::STATUS_PENDING . '= Pending ');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
