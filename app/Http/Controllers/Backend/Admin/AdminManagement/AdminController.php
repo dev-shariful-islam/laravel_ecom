@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -51,32 +52,70 @@ class AdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Admin $admin)
     {
-        //
+        $admin->load(['createdBy', 'updatedBy']);
+        return view('backend.admin.admin_management.admin.details', compact('admin'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Admin $admin)
     {
-        //
+        return view('backend.admin.admin_management.admin.edit', compact('admin'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AdminRequest $request, Admin $admin)
     {
-        //
+        $data = $request->validated();
+        if($request->hasFile('image'))  {
+            $image = $request->file('image');
+            $image_name = time().'_'.$image->getClientOriginalName();
+            $path = $image->storeAs('admin/images', $image_name, 'public');
+            $data['image'] = $path;
+            if($admin->image) {
+                Storage::disk('public')->delete($admin->image);
+            }
+        }
+        $data['password'] = $request->password ? $request->password : $admin->password;
+        $data['updated_by'] = admin()->id;
+        $admin->update($data);
+        return redirect()->route('am.admin.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Admin $admin)
     {
-        //
+        $admin->update(['deleted_by' => admin()->id]);
+        $admin->delete();
+        return redirect()->route('am.admin.index');
+    }
+
+    public function recycle_bin()
+    {
+        $data['admins'] = Admin::with('deletedBy')->onlyTrashed()->latest()->get();
+        return view('backend.admin.admin_management.admin.trash', $data);
+    }
+
+    public function restores(Admin $admin)
+    {
+        $admin->update(['deleted_by' => null, 'updated_by' => admin()->id]);
+        $admin->restore();
+        return redirect()->route('am.admin.index');
+    }
+
+    public function forceDelete(Admin $admin)
+    {
+        if($admin->image) {
+            Storage::disk('public')->delete($admin->image);
+        }
+        $admin->forceDelete();
+        return redirect()->route('am.admin.index');
     }
 }

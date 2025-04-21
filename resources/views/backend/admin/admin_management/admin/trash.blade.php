@@ -1,15 +1,12 @@
 @extends('backend.admin.layouts.master', ['page_slug' => 'admin'])
-@section('title', 'Admin List -')
+@section('title', 'Admin Trash -')
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">{{__('Admin List')}}</h4>
-                    <div class="buttons">
-                        <a href="{{route('am.admin.recycle_bin')}}" class="btn btn-info">{{__('Recycle Bin')}}</a>
-                        <a href="{{route('am.admin.create')}}" class="btn btn-primary">{{__('Add New')}}</a>
-                    </div>
+                    <h4 class="card-title">{{__('Admin Trash')}}</h4>
+                    <a href="{{route('am.admin.index')}}" class="btn btn-primary">{{__('Back')}}</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -20,8 +17,8 @@
                                     <th>{{__('Name')}}</th>
                                     <th>{{__('Email')}}</th>
                                     <th>{{__('Status')}}</th>
-                                    <th>{{__('Created By')}}</th>
-                                    <th>{{__('Created Date')}}</th>
+                                    <th>{{__('Deleted By')}}</th>
+                                    <th>{{__('Deleted Date')}}</th>
                                     <th>{{__('Action')}}</th>
                                 </tr>
                             </thead>
@@ -32,19 +29,13 @@
                                         <td>{{$admin->name}}</td>
                                         <td>{{$admin->email}}</td>
                                         <td><span class="badge {{$admin->status_badge_color}}">{{$admin->status_badge_label}}</span></td>
-                                        <td>{{$admin->createdBy ? $admin->createdBy->name : 'System'}}</td>
-                                        <td>{{date('d M, Y', strtotime($admin->created_at))}}</td>
+                                        <td>{{$admin->deletedBy ? $admin->deletedBy->name : 'System'}}</td>
+                                        <td>{{date('d M, Y', strtotime($admin->deleted_at))}}</td>
                                         <td>
                                             <div class="form-button-action">
-                                                <a href="{{route('am.admin.show', $admin->id)}}" class="btn btn-link btn-info btn-lg"><i class="fa fa-eye"></i></a>
+                                                <a href="{{route('am.admin.restores', $admin->id)}}" class="btn btn-link btn-success btn-lg"><i class="fa fa-undo"></i></a>
 
-                                                <a href="{{route('am.admin.edit', $admin->id)}}" class="btn btn-link btn-primary btn-lg"><i class="fa fa-edit"></i></a>
-                                                <a onclick="document.getElementById('delete-form{{$admin->id}}').submit();" href="javascript:void(0);" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
-                                                <form action="{{route('am.admin.destroy', $admin->id)}}" method="POST" id="delete-form{{$admin->id}}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-
+                                                <a href="{{route('am.admin.fd', $admin->id)}}" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
                                             </div>
                                         </td>
                                     </tr>

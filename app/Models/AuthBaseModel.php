@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AuthBaseModel extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
 
     public const STATUS_INACTIVE = -1;
@@ -22,6 +23,7 @@ class AuthBaseModel extends Authenticatable
     protected $appends = [
         'status_badge_label',
         'status_badge_color',
+        'gender_label',
     ];
 
 
@@ -49,6 +51,17 @@ class AuthBaseModel extends Authenticatable
         return $this->getStatusBg()[$this->status] ?? 'bg-secondary';
     }
 
+    public function getGender()
+    {
+        return [
+            self::GENDER_MALE => 'Male',
+            self::GENDER_FEMALE => 'Female',
+            self::GENDER_OTHER => 'Other',
+        ];
+    }
+    public function getGenderLabelAttribute(): string {
+        return $this->getGender()[$this->gender] ?? 'Unknown';
+    }
     public function creater()
     {
         return $this->morphTo();

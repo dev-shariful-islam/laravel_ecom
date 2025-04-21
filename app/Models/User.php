@@ -18,6 +18,8 @@ class User extends AuthBaseModel
         'email',
         'password',
         'image',
+        'status',
+        'gender',
 
         'creater_id',
         'creater_type',

@@ -38,8 +38,9 @@ class AdminRequest extends FormRequest
     protected function update(): array
     {
         return [
-            'email' => 'required|string|email|max:255|unique:admins,'.$this->route('admin'),
+            'email' => 'required|string|email|max:255|unique:admins,email,' . $this->route('admin')->id,
             'password' => 'nullable|string|min:8|confirmed',
+            'status' => 'required|integer',
         ];
     }
 }
