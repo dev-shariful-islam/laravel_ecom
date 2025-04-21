@@ -38,11 +38,26 @@
     <!-- CSS Files -->
     {{-- <link rel="stylesheet" href="{{asset('admin/assets/css/plugins.min.css')}}" /> --}}
     <link rel="stylesheet" href="{{asset('admin/assets/css/kaiadmin.min.css')}}" />
-
+    @stack('css_link')
     {{-- Custom Css  --}}
     <link rel="stylesheet" href="{{asset('admin/css/custom.css')}}">
-
+    @stack('css')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                showAlert('success', '{{ session('success') }}');
+            @endif
+
+            @if (session('error'))
+                showAlert('error', '{{ session('error') }}');
+            @endif
+
+            @if (session('warning'))
+                showAlert('warning', '{{ session('warning') }}');
+            @endif
+        });
+    </script>
   </head>
   <body>
     <div class="wrapper">
@@ -74,6 +89,8 @@
 
     <!-- Kaiadmin JS -->
     <script src="{{asset('admin/assets/js/kaiadmin.min.js')}}"></script>
+    @stack('js_link')
     <script src="{{asset('admin/js/custom.js')}}"></script>
+    @stack('js')
   </body>
 </html>

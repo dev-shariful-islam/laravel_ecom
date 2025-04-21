@@ -46,7 +46,7 @@ class AdminController extends Controller
         }
         $request_data['created_by'] = admin()->id;
         Admin::create($request_data);
-        return redirect()->route('am.admin.index');
+        return redirect()->route('am.admin.index')->with('success', 'Admin Created Successfully');
     }
 
     /**
@@ -84,7 +84,7 @@ class AdminController extends Controller
         $data['password'] = $request->password ? $request->password : $admin->password;
         $data['updated_by'] = admin()->id;
         $admin->update($data);
-        return redirect()->route('am.admin.index');
+        return redirect()->route('am.admin.index')->with('success', 'Admin Updated Successfully');
     }
 
     /**
