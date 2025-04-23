@@ -49,7 +49,7 @@
                         </div>
                         <div class="form-group">
                             <label for="password_confirmation">{{__('Password Confirmation')}}</label>
-                            <input type="password_confirmation" name="password_confirmation" class="form-control" >
+                            <input type="password" name="password_confirmation" class="form-control" >
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">{{__('Submit')}}</button>

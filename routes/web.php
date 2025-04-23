@@ -31,8 +31,8 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin'], function () 
     // Admin Management Routes
     Route::group(['prefix' => 'admin-management', 'as' => 'am.'], function () {
         Route::get('admin/recycle/bin', [AdminController::class, 'recycle_bin'])->name('admin.recycle_bin');
-        Route::get('admin/{admin}/restore-actions/', [AdminController::class, 'restores'])->name('admin.restores');
-        Route::get('admin/{admin}/   force-delete-actions/', [AdminController::class, 'forceDelete'])->name('admin.fd');
+        Route::get('admin/{admin}/restore-data', [AdminController::class, 'restore_data'])->name('admin.restore-data');
+        Route::get('admin/{admin}/force-delete', [AdminController::class, 'force_delete'])->name('admin.force-delete');
         Route::resource('admin', AdminController::class);
     });
 });

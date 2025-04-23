@@ -33,9 +33,14 @@
                                         <td>{{date('d M, Y', strtotime($admin->deleted_at))}}</td>
                                         <td>
                                             <div class="form-button-action">
-                                                <a href="{{route('am.admin.restores', $admin->id)}}" class="btn btn-link btn-success btn-lg"><i class="fa fa-undo"></i></a>
+                                                <a href="{{route('am.admin.restore-data', $admin->id)}}" class="btn btn-link btn-success btn-lg"><i class="fa fa-undo"></i></a>
 
-                                                <a href="{{route('am.admin.fd', $admin->id)}}" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
+                                                <a onclick="
+                                                confirmDelete(() => document.getElementById('delete-form{{$admin->id}}').submit())" href="javascript:void(0);" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
+                                                <form action="{{route('am.admin.force-delete', $admin->id)}}" method="POST" id="delete-form{{$admin->id}}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

@@ -103,15 +103,17 @@ class AdminController extends Controller
         return view('backend.admin.admin_management.admin.trash', $data);
     }
 
-    public function restores(Admin $admin)
+    public function restore_data($id)
     {
+        $admin = Admin::withTrashed()->findOrFail($id);
         $admin->update(['deleted_by' => null, 'updated_by' => admin()->id]);
         $admin->restore();
         return redirect()->route('am.admin.index');
     }
 
-    public function forceDelete(Admin $admin)
+    public function force_delete($id)
     {
+        $admin = Admin::withTrashed()->findOrFail($id);
         if($admin->image) {
             Storage::disk('public')->delete($admin->image);
         }
