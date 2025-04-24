@@ -1,14 +1,13 @@
-@extends('backend.admin.layouts.master', ['page_slug' => 'admin'])
-@section('title', 'Admin List -')
+@extends('backend.admin.layouts.master', ['page_slug' => 'role'])
+@section('title', 'Role List -')
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">{{__('Admin List')}}</h4>
+                    <h4 class="card-title">{{__('Role List')}}</h4>
                     <div class="buttons">
-                        <a href="{{route('am.admin.recycle_bin')}}" class="btn btn-info">{{__('Recycle Bin')}}</a>
-                        <a href="{{route('am.admin.create')}}" class="btn btn-primary">{{__('Add New')}}</a>
+                        <a href="{{route('am.role.create')}}" class="btn btn-primary">{{__('Add New')}}</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -18,30 +17,28 @@
                                 <tr>
                                     <th>{{__('SL')}}</th>
                                     <th>{{__('Name')}}</th>
-                                    <th>{{__('Email')}}</th>
-                                    <th>{{__('Status')}}</th>
+                                    <th>{{__('Guard')}}</th>
                                     <th>{{__('Created By')}}</th>
                                     <th>{{__('Created Date')}}</th>
                                     <th>{{__('Action')}}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($admins as $admin)
+                                @foreach ($roles as $role)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$admin->name}}</td>
-                                        <td>{{$admin->email}}</td>
-                                        <td><span class="badge {{$admin->status_badge_color}}">{{$admin->status_badge_label}}</span></td>
-                                        <td>{{creater_name($admin->createdBy)}}</td>
-                                        <td>{{dateTimeFormat($admin->created_at)}}</td>
+                                        <td>{{$role->name}}</td>
+                                        <td>{{$role->guard_name}}</td>
+                                        <td>{{creater_name($role->createdBy)}}</td>
+                                        <td>{{dateTimeFormat($role->created_at)}}</td>
                                         <td>
                                             <div class="form-button-action">
-                                                <a href="{{route('am.admin.show', $admin->id)}}" class="btn btn-link btn-info btn-lg"><i class="fa fa-eye"></i></a>
+                                                <a href="{{route('am.role.show', $role->id)}}" class="btn btn-link btn-info btn-lg"><i class="fa fa-eye"></i></a>
 
-                                                <a href="{{route('am.admin.edit', $admin->id)}}" class="btn btn-link btn-primary btn-lg"><i class="fa fa-edit"></i></a>
+                                                <a href="{{route('am.role.edit', $role->id)}}" class="btn btn-link btn-primary btn-lg"><i class="fa fa-edit"></i></a>
                                                 <a onclick="
-                                                confirmDelete(() => document.getElementById('delete-form{{$admin->id}}').submit())" href="javascript:void(0);" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
-                                                <form action="{{route('am.admin.destroy', $admin->id)}}" method="POST" id="delete-form{{$admin->id}}">
+                                                confirmDelete(() => document.getElementById('delete-form{{$role->id}}').submit())" href="javascript:void(0);" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
+                                                <form action="{{route('am.role.destroy', $role->id)}}" method="POST" id="delete-form{{$role->id}}">
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>

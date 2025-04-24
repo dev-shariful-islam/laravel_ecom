@@ -34,17 +34,27 @@
             </a>
           </li>
 
-          <li class="nav-item {{ $page_slug == 'admin' ? 'active' : ''}}">
-            <a data-bs-toggle="collapse" href="#admin_management" aria-expanded="{{ $page_slug == 'admin' ? 'true' : 'false'}}">
+          <li class="nav-item {{ $page_slug == 'admin' || $page_slug == 'role' || $page_slug == 'permission' ? 'active' : ''}}">
+            <a data-bs-toggle="collapse" href="#admin_management" aria-expanded="{{ $page_slug == 'admin' || $page_slug == 'role' || $page_slug == 'permission' ? 'true' : 'false'}}">
               <i class="fas fa-users"></i>
               <p>{{__('Admin Management')}}</p>
               <span class="caret"></span>
             </a>
-            <div class="collapse {{ $page_slug == 'admin' ? 'show' : ''}}" id="admin_management">
+            <div class="collapse {{ $page_slug == 'admin' || $page_slug == 'role' || $page_slug == 'permission' ? 'show' : ''}}" id="admin_management">
               <ul class="nav nav-collapse">
                 <li class="{{ $page_slug == 'admin' ? 'active' : ''}}">
                   <a href="{{route('am.admin.index')}}">
                     <span class="sub-item">{{__('Admins')}}</span>
+                  </a>
+                </li>
+                <li class="{{ $page_slug == 'role' ? 'active' : ''}}">
+                  <a href="{{route('am.role.index')}}">
+                    <span class="sub-item">{{__('Roles')}}</span>
+                  </a>
+                </li>
+                <li class="{{ $page_slug == 'permission' ? 'active' : ''}}">
+                  <a href="{{route('am.permission.index')}}">
+                    <span class="sub-item">{{__('Permissions')}}</span>
                   </a>
                 </li>
               </ul>

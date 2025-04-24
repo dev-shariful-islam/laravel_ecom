@@ -20,7 +20,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $data['admins'] = Admin::latest()->get();
+        $data['admins'] = Admin::with('createdBy')->latest()->get();
         return view('backend.admin.admin_management.admin.index', $data);
     }
 

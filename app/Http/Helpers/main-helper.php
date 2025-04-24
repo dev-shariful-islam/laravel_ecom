@@ -43,4 +43,27 @@ function auth_storage_url($url, $gender = false)
     return $url ? asset('storage/' . $url) : $image;
 }
 
+function creater_name($model){
+    return $model ? $model->name : 'System';
+}
+
+function updater_name($model){
+    return $model ? $model->name : 'Null';
+}
+function deleter_name($model){
+    return $model ? $model->name : 'Null';
+}
+
+function timeFormat($time){
+    return date('h:i:s A', strtotime($time));
+}
+
+function dateFormat($date){
+    return date('d M, Y', strtotime($date));
+}
+
+function dateTimeFormat($date){
+    return dateFormat($date) . ' ' . timeFormat($date);
+}
+
 

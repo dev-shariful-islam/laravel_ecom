@@ -29,8 +29,8 @@
                                         <td>{{$admin->name}}</td>
                                         <td>{{$admin->email}}</td>
                                         <td><span class="badge {{$admin->status_badge_color}}">{{$admin->status_badge_label}}</span></td>
-                                        <td>{{$admin->deletedBy ? $admin->deletedBy->name : 'System'}}</td>
-                                        <td>{{date('d M, Y', strtotime($admin->deleted_at))}}</td>
+                                        <td>{{deleter_name($admin->deletedBy)}}</td>
+                                        <td>{{dateTimeFormat($admin->deleted_at)}}</td>
                                         <td>
                                             <div class="form-button-action">
                                                 <a href="{{route('am.admin.restore-data', $admin->id)}}" class="btn btn-link btn-success btn-lg"><i class="fa fa-undo"></i></a>

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use App\Models\AuthBaseModel;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends AuthBaseModel
 {
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.

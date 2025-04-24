@@ -22,17 +22,17 @@ class BaseModel extends Model
     }
 
 
-    public function created_by()
+    public function createdBy()
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }
 
-    public function updated_by()
+    public function updatedBy()
     {
         return $this->belongsTo(Admin::class, 'updated_by');
     }
 
-    public function deleted_by()
+    public function deletedBy()
     {
         return $this->belongsTo(Admin::class, 'deleted_by');
     }

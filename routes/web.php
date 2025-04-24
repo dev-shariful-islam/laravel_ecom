@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Backend\Admin\AdminManagement\AdminController;
+use App\Http\Controllers\Backend\Admin\AdminManagement\PermissionController;
+use App\Http\Controllers\Backend\Admin\AdminManagement\RoleController;
 use App\Http\Controllers\Backend\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Backend\User\UserProfileController;
 use App\Http\Controllers\Frontend\HomeController;
@@ -30,10 +32,17 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin'], function () 
 
     // Admin Management Routes
     Route::group(['prefix' => 'admin-management', 'as' => 'am.'], function () {
+        // Admin Routes
         Route::get('admin/recycle/bin', [AdminController::class, 'recycle_bin'])->name('admin.recycle_bin');
         Route::get('admin/{admin}/restore-data', [AdminController::class, 'restore_data'])->name('admin.restore-data');
         Route::delete('admin/{admin}/force-delete', [AdminController::class, 'force_delete'])->name('admin.force-delete');
         Route::resource('admin', AdminController::class);
+
+        // Role Routes
+        Route::resource('role', RoleController::class);
+
+        // Permission Routes
+        Route::resource('permission', PermissionController::class);
     });
 });
 

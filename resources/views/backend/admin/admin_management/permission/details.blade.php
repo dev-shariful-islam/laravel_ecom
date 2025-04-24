@@ -1,12 +1,12 @@
-@extends('backend.admin.layouts.master', ['page_slug' => 'admin'])
-@section('title', 'Admin Details -')
+@extends('backend.admin.layouts.master', ['page_slug' => 'permission'])
+@section('title', 'Permission Details -')
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">{{__('Admin Details')}}</h4>
-                    <a href="{{route('am.admin.index')}}" class="btn btn-primary">{{__('Back')}}</a>
+                    <h4 class="card-title">{{__('Permission Details')}}</h4>
+                    <a href="{{route('am.permission.index')}}" class="btn btn-primary">{{__('Back')}}</a>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped">
@@ -14,47 +14,37 @@
                             <tr>
                                 <td>{{__('Name')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td>{{$admin->name}}</td>
+                                <td>{{$permission->name}}</td>
                             </tr>
                             <tr>
-                                <td>{{__('Image')}}</td>
+                                <td>{{__('Prefix')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td><img src="{{auth_storage_url($admin->image, $admin->gender)}}" alt="" height="50" width="50"></td>
+                                <td>{{$permission->prefix}}</td>
                             </tr>
                             <tr>
-                                <td>{{__('Email')}}</td>
+                                <td>{{__('Guard')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td>{{$admin->email}}</td>
-                            </tr>
-                            <tr>
-                                <td>{{__('Gender')}}</td>
-                                <td>{{__(':')}}</td>
-                                <td>{{$admin->gender_label}}</td>
-                            </tr>
-                            <tr>
-                                <td>{{__('Status')}}</td>
-                                <td>{{__(':')}}</td>
-                                <td><span class="badge {{$admin->status_badge_color}}">{{$admin->status_badge_label}}</span></td>
+                                <td>{{$permission->guard_name}}</td>
                             </tr>
                             <tr>
                                 <td>{{__('Created By')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td>{{$admin->createdBy ? $admin->createdBy->name : 'System'}}</td>
+                                <td>{{creater_name($permission->createdBy)}}</td>
                             </tr>
                             <tr>
                                 <td>{{__('Created Date')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td>{{dateTimeFormat($admin->created_at)}}</td>
+                                <td>{{dateTimeFormat($permission->created_at)}}</td>
                             </tr>
                             <tr>
                                 <td>{{__('Updated By')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td>{{$admin->updatedBy ? $admin->updatedBy->name : 'Null'}}</td>
+                                <td>{{updater_name($permission->updatedBy)}}</td>
                             </tr>
                             <tr>
                                 <td>{{__('Updated Date')}}</td>
                                 <td>{{__(':')}}</td>
-                                <td>{{$admin->created_at != $admin->updated_at ? dateTimeFormat($admin->updated_at) : 'Null'}}</td>
+                                <td>{{$permission->created_at != $permission->updated_at ? dateTimeFormat($permission->updated_at) : 'Null'}}</td>
                             </tr>
                         </tbody>
                     </table>
