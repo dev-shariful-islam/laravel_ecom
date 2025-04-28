@@ -29,6 +29,21 @@
                                 </span>
                             @endif
                         </div>
+
+                        <div class="form-group">
+                            <label for="role_id">{{__('Role')}}</label>
+                            <select name="role_id" class="form-control {{ $errors->has('role_id') ? ' is-invalid' : '' }}">
+                                <option value="">{{__('Select Role')}}</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{$role->id}}" {{old('role_id') == $role->id ? 'selected' : ''}}>{{$role->name}}</option>
+                                @endforeach
+                            </select>
+                            @if ($errors->has('role_id'))
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('role_id') }}</strong>
+                                </span>
+                            @endif
+                        </div>
                         <div class="form-group">
                             <label for="image">{{__('Image')}}</label>
                             <input type="file" name="image" class="form-control {{ $errors->has('image') ? ' is-invalid' : '' }}">

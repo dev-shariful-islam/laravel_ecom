@@ -21,6 +21,7 @@ class Admin extends AuthBaseModel
         'image',
         'status',
         'gender',
+        'role_id',
 
         'created_by',
         'updated_by',
@@ -53,5 +54,10 @@ class Admin extends AuthBaseModel
             'password' => 'hashed',
             'status'  => 'integer',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }

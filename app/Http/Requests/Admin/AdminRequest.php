@@ -24,6 +24,7 @@ class AdminRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'role_id' => 'required|exists:roles,id',
         ] + ($this->isMethod('POST') ? $this->store() : $this->update());
     }
 

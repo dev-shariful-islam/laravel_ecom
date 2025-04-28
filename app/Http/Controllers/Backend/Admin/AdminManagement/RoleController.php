@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Backend\Admin\AdminManagement;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
@@ -28,7 +30,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('backend.admin.admin_management.role.create');
+        $data['grouped_permissions'] = Permission::orderBy('prefix')->get()->groupBy('prefix');
+        return view('backend.admin.admin_management.role.create',$data);
     }
 
     /**
@@ -37,9 +40,12 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         $data = $request->validated();
-        $data['created_by'] = admin()->id;
-        $data['guard_name'] = 'admin';
-        Role::create($data);
+        DB::transaction(function () use ($data, $request) {
+            $data['created_by'] = admin()->id;
+            $data['guard_name'] = 'admin';
+            $role = Role::create($data);
+            $role->givePermissionTo($request->permissions);
+        });
         session()->flash('success', 'Role Created Successfully');
         return redirect()->route('am.role.index');
     }
@@ -57,7 +63,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        return view('backend.admin.admin_management.role.edit', compact('role'));
+        $role->load('permissions');
+        $grouped_permissions = Permission::orderBy('prefix')->get()->groupBy('prefix');
+        return view('backend.admin.admin_management.role.edit', compact('role', 'grouped_permissions'));
     }
 
     /**
@@ -66,8 +74,11 @@ class RoleController extends Controller
     public function update(RoleRequest $request, Role $role)
     {
         $data = $request->validated();
-        $data['updated_by'] = admin()->id;
-        $role->update($data);
+        DB::transaction(function () use ($data, $request, $role) {
+            $data['updated_by'] = admin()->id;
+            $role->update($data);
+            $role->syncPermissions($request->permissions);
+        });
         session()->flash('success', 'Role Updated Successfully');
         return redirect()->route('am.role.index');
     }

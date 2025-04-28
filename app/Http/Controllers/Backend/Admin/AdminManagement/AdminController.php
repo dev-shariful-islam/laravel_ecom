@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Backend\Admin\AdminManagement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
 use App\Models\Admin;
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
@@ -13,6 +15,11 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth:admin');
+        $this->middleware('permission:admin-list')->only('index');
+        $this->middleware('permission:admin-create')->only('create', 'store');
+        $this->middleware('permission:admin-edit')->only('edit', 'update');
+        $this->middleware('permission:admin-delete')->only('destroy');
+        $this->middleware('permission:admin-details')->only('show');
     }
 
     /**
@@ -29,7 +36,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('backend.admin.admin_management.admin.create');
+        $data['roles'] = Role::orderBy('name')->get();
+        return view('backend.admin.admin_management.admin.create', $data);
     }
 
     /**
@@ -38,14 +46,18 @@ class AdminController extends Controller
     public function store(AdminRequest $request)
     {
         $request_data = $request->validated();
-        if($request->hasFile('image'))  {
-            $image = $request->file('image');
-            $image_name = time().'_'.$image->getClientOriginalName();
-            $path = $image->storeAs('admin/images', $image_name, 'public');
-            $request_data['image'] = $path;
-        }
-        $request_data['created_by'] = admin()->id;
-        Admin::create($request_data);
+        DB::transaction(function () use ($request_data, $request) {
+            if($request->hasFile('image'))  {
+                $image = $request->file('image');
+                $image_name = time().'_'.$image->getClientOriginalName();
+                $path = $image->storeAs('admin/images', $image_name, 'public');
+                $request_data['image'] = $path;
+            }
+            $request_data['created_by'] = admin()->id;
+            $admin = Admin::create($request_data);
+            $role = Role::findOrFail($request->role_id);
+            $admin->assignRole($role->name);
+        });
         return redirect()->route('am.admin.index')->with('success', 'Admin Created Successfully');
     }
 
@@ -63,7 +75,8 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        return view('backend.admin.admin_management.admin.edit', compact('admin'));
+        $roles = Role::orderBy('name')->get();
+        return view('backend.admin.admin_management.admin.edit', compact('admin', 'roles'));
     }
 
     /**
@@ -71,19 +84,25 @@ class AdminController extends Controller
      */
     public function update(AdminRequest $request, Admin $admin)
     {
+
         $data = $request->validated();
-        if($request->hasFile('image'))  {
-            $image = $request->file('image');
-            $image_name = time().'_'.$image->getClientOriginalName();
-            $path = $image->storeAs('admin/images', $image_name, 'public');
-            $data['image'] = $path;
-            if($admin->image) {
-                Storage::disk('public')->delete($admin->image);
+
+        DB::transaction(function () use ($data, $request, $admin) {
+            if($request->hasFile('image'))  {
+                $image = $request->file('image');
+                $image_name = time().'_'.$image->getClientOriginalName();
+                $path = $image->storeAs('admin/images', $image_name, 'public');
+                $data['image'] = $path;
+                if($admin->image) {
+                    Storage::disk('public')->delete($admin->image);
+                }
             }
-        }
-        $data['password'] = $request->password ? $request->password : $admin->password;
-        $data['updated_by'] = admin()->id;
-        $admin->update($data);
+            $data['password'] = $request->password ? $request->password : $admin->password;
+            $data['updated_by'] = admin()->id;
+            $admin->update($data);
+            $role = Role::findOrFail($request->role_id);
+            $admin->syncRoles($role->name);
+        });
         return redirect()->route('am.admin.index')->with('success', 'Admin Updated Successfully');
     }
 

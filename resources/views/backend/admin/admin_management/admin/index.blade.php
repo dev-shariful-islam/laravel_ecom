@@ -19,6 +19,7 @@
                                     <th>{{__('SL')}}</th>
                                     <th>{{__('Name')}}</th>
                                     <th>{{__('Email')}}</th>
+                                    <th>{{__('Role')}}</th>
                                     <th>{{__('Status')}}</th>
                                     <th>{{__('Created By')}}</th>
                                     <th>{{__('Created Date')}}</th>
@@ -31,22 +32,42 @@
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$admin->name}}</td>
                                         <td>{{$admin->email}}</td>
+                                        <td>{{optional($admin->role)->name}}</td>
                                         <td><span class="badge {{$admin->status_badge_color}}">{{$admin->status_badge_label}}</span></td>
                                         <td>{{creater_name($admin->createdBy)}}</td>
                                         <td>{{dateTimeFormat($admin->created_at)}}</td>
                                         <td>
-                                            <div class="form-button-action">
-                                                <a href="{{route('am.admin.show', $admin->id)}}" class="btn btn-link btn-info btn-lg"><i class="fa fa-eye"></i></a>
+                                                @include('backend.admin.includes.action-buttons', ['actionButtons' =>
 
-                                                <a href="{{route('am.admin.edit', $admin->id)}}" class="btn btn-link btn-primary btn-lg"><i class="fa fa-edit"></i></a>
-                                                <a onclick="
-                                                confirmDelete(() => document.getElementById('delete-form{{$admin->id}}').submit())" href="javascript:void(0);" class="btn btn-link btn-danger btn-lg"><i class="fa fa-trash"></i></a>
-                                                <form action="{{route('am.admin.destroy', $admin->id)}}" method="POST" id="delete-form{{$admin->id}}">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
+                                                 [
+                                                        [
+                                                            'routeName' => 'am.admin.show',
+                                                            'params' => [$admin->id],
+                                                            'className' => 'btn-info',
+                                                            'icon' => 'fa fa-eye',
+                                                            'permissions' => ['admin-details']
+                                                        ],
+                                                        [
+                                                            'routeName' => 'am.admin.edit',
+                                                            'params' => [$admin->id],
+                                                            'className' => 'btn-primary',
+                                                            'icon' => 'fa fa-edit',
+                                                            'permissions' => ['admin-edit']
+                                                        ],
+                                                        [
+                                                            'routeName' => 'am.admin.destroy',
+                                                            'params' => [$admin->id],
+                                                            'className' => 'btn-danger',
+                                                            'id'=>'delete-form'.$admin->id,
+                                                            'icon' => 'fa fa-trash',
+                                                            'delete' => true,
+                                                            'permissions' => ['admin-delete']
+                                                        ]
 
-                                            </div>
+                                                    ]
+
+
+                                                 ])
                                         </td>
                                     </tr>
                                 @endforeach
